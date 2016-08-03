@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "hvenus\\sf-express-api-php\\": "src/"
+            "hVenus\\SFExpressAPI\\": "src/"
         }
     },
     "license": "MIT"
