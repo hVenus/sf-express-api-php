@@ -1,0 +1,25 @@
+{
+    "name": "hvenus/sf-express-api-php",
+    "description": "sf-express API php vertion.",
+    "authors": [
+        {
+            "name": "hVenus",
+            "email": "kevin@fm618.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.9",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "hvenus\\sf-express-api-php\\": "src/"
+        }
+    },
+    "license": "MIT"
+
+}
