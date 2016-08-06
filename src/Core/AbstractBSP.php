@@ -1,5 +1,4 @@
-<?php
-namespace hVenus\SFExpressAPI\Core;
+<?php namespace hVenus\SFExpressAPI\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;

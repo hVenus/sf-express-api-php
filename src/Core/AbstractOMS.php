@@ -1,10 +1,7 @@
-<?php
-namespace hVenus\SFExpressAPI\Core;
-
+<?php namespace hVenus\SFExpressAPI\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use hVenus\SFExpressAPI\Support\XML;
 
 class AbstractOMS
 {
@@ -12,7 +9,8 @@ class AbstractOMS
         'server' => "http://bsp.sit.sf-express.com:8080/",
         'uri' => 'bsp-wms/OmsCommons',
         'checkword' => 'j8DzkIFgmlomPt0aLuwU',
-        'accesscode' => 'BSPdevelop'
+        'accesscode' => 'BSPdevelop',
+        'companycode ' => ''
     ];
 
     private $SERVICE = array(
@@ -52,6 +50,12 @@ class AbstractOMS
         'hVenus\SFExpressAPI\OMS\InventoryOccupancyPushService'         => 'INVENTORY_OCCUPANCY_PUSH_SERVICE',
     );
 
+    protected $ret = array(
+        'head' => "ERR",
+        'message' => '系统错误',
+        'code' => -1
+    );
+
     public function __construct($params = null)
     {
         if (null != $params) {
@@ -77,18 +81,21 @@ class AbstractOMS
             );
             $body = $response->getBody();
             $contents = $body->getContents();
-            $data = XML::parse($contents);
-            return $data;
+            return $contents;
         } catch(RequestException $e) {
             if ($e->hasResponse()) {
-                $body = XML::parse($e->getResponse()->getBody()->getContents());
-                return $body;
+                return $e->getResponse()->getBody()->getContents();
             } else {
                 return $e->getMessage();
             }
         }
     }
 
+    /**
+     * get request service name.
+     * @param null $class
+     * @return mixed
+     */
     public function getServiceName($class=null) {
         if(empty($class)){
             return $this->SERVICE[get_called_class()];
@@ -96,6 +103,11 @@ class AbstractOMS
         return $this->SERVICE[$class];
     }
 
+    /**
+     * build full xml.
+     * @param $bodyData
+     * @return string
+     */
     public function buildXml($bodyData){
         $xml = '<Request service="'.$this->getServiceName(get_called_class()).'" lang="zh-CN">' .
             '<Head>' .
