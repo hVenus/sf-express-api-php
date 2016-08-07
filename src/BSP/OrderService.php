@@ -72,7 +72,7 @@ class OrderService extends AbstractBSP
      * @param $cargoes
      * @return array|\GuzzleHttp\Stream\StreamInterface|null|\SimpleXMLElement|string
      */
-    public static function Cargo($cargoes) {
+    private static function Cargo($cargoes) {
         $data = '';
         if (count($cargoes) > 0) {
             foreach ($cargoes as $item) {
@@ -94,7 +94,7 @@ class OrderService extends AbstractBSP
      * @param $AddedServices
      * @return string
      */
-    public static function AddedService($AddedServices) {
+    private static function AddedService($AddedServices) {
         $data = '';
         if (count($AddedServices) > 0) {
             foreach ($AddedServices as $item) {
@@ -116,30 +116,7 @@ class OrderService extends AbstractBSP
      * @param $data
      * @return array
      */
-    public function  OrderResponse($data) {
-        $ret = $this->ret;
-        $xml = @simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
-        if ($xml){
-            $ret = array();
-            $ret['head'] = (string)$xml->Head;
-            if ($xml->Head == 'OK'){
-                if (isset($xml->Body->OrderResponse)){
-                    foreach ($xml->Body->OrderResponse as $v) {
-                        foreach ($v->attributes() as $key => $val) {
-                            $ret[$key] = (string)$val;
-                        }
-                    }
-                }
-            }
-            if ($xml->Head == 'ERR'){
-                $ret['message'] = (string)$xml->ERROR;
-                if (isset($xml->ERROR[0])) {
-                    foreach ($xml->ERROR[0]->attributes() as $key => $val) {
-                        $ret[$key] = (string)$val;
-                    }
-                }
-            }
-        }
-        return $ret;
+    private function  OrderResponse($data) {
+        return $this->getResponse($data, 'OrderResponse');
     }
 }

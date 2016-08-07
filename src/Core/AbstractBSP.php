@@ -104,4 +104,41 @@ class AbstractBSP
             '</Request>';
         return $xml;
     }
+
+    public function getResponse($data, $name) {
+        $ret = $this->ret;
+        $xml = @simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
+        if ($xml){
+            $ret = array();
+            $ret['head'] = (string)$xml->Head;
+            if ($xml->Head == 'OK'){
+                $ret = array_merge($ret , $this->getData($xml, $name));
+            }
+            if ($xml->Head == 'ERR'){
+                $ret = array_merge($ret , $this->getErrorMessage($xml));
+            }
+        }
+        return $ret;
+    }
+
+    public function getErrorMessage($xml) {
+        $ret = array();
+        $ret['message'] = (string)$xml->ERROR;
+        if (isset($xml->ERROR[0])) {
+            foreach ($xml->ERROR[0]->attributes() as $key => $val) {
+                $ret[$key] = (string)$val;
+            }
+        }
+        return $ret;
+    }
+
+    public function getData($xml, $name) {
+        if (isset($xml->Body->$name)){
+            foreach ($xml->Body->$name as $v) {
+                foreach ($v->attributes() as $key => $val) {
+                    $ret[$key] = (string)$val;
+                }
+            }
+        }
+    }
 }
