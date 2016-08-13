@@ -133,6 +133,7 @@ class AbstractBSP
     }
 
     public function getData($xml, $name) {
+        $ret = array();
         if (isset($xml->Body->$name)){
             foreach ($xml->Body->$name as $v) {
                 foreach ($v->attributes() as $key => $val) {
@@ -140,5 +141,22 @@ class AbstractBSP
                 }
             }
         }
+        return $ret;
     }
+
+    public function arrarval($data)
+    {
+        if (is_object($data) && get_class($data) === 'SimpleXMLElement') {
+            $data = (array) $data;
+        }
+
+        if (is_array($data)) {
+            foreach ($data as $index => $value) {
+                $data[$index] = self::arrarval($value);
+            }
+        }
+
+        return $data;
+    }
+
 }
